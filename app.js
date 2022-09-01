@@ -11,7 +11,7 @@ let editflag = false;
 let editID = "";
 
 form.addEventListener("submit", additem);
-form.addEventListener(".clear-btn", deletelista);
+clearBtn.addEventListener("click", deletelista);
 
 
 function additem(e){
@@ -32,17 +32,22 @@ function additem(e){
     addToLocalStorage(value);
     
 }
-
-function deletelista(e){
-
-    
+function deletelista(){
+    const items = document.querySelectorAll(".todo-item");
+    if (items.length > 0) {
+        items.forEach(function (item) {
+        list.removeChild(item);
+        });
+    container.classList.remove("show-container");
+    setBackToDefault();
+    localStorage.removeItem("list");
+    }    
 }
 
 function addToLocalStorage(value){
     const todo = {value};  
     let itens = getLocalStorage();
     itens.push(todo);
-    console.log(itens);
     localStorage.setItem("lista", JSON.stringify(itens));
 
 }
@@ -60,3 +65,9 @@ function getLocalStorage() {
 
 }
 
+function setBackToDefault() {
+    todo.value = "";
+    editFlag = false;
+    editID = "";
+    submitBtn.textContent = "submit";
+  }
