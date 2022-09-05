@@ -2,10 +2,11 @@ const form = document.querySelector(".todo-form");
 const alert = document.querySelector(".alert");
 const submitBtn = document.querySelector(".submit-btn");
 const container = document.querySelector(".todo-container");
-const list = document.querySelector(".todo-list");
 const clearBtn = document.querySelector(".clear-btn");
 const todo = document.getElementById("todo");
 
+
+let id = 0;
 let editelement;
 let editflag = false;
 let editID = "";
@@ -13,35 +14,41 @@ let editID = "";
 form.addEventListener("submit", additem);
 clearBtn.addEventListener("click", deletelista);
 
-
 function additem(e){
     e.preventDefault();
     const value = todo.value;
-    const element = document.createElement("article");
-    element.classList.add("todo-item");
-    element.innerHTML = `<p class="title">${value}</p>
-            <div class="btn-container">
-             <!-- delete btn -->
-            <button type="button" class="delete-btn">
-                <i class="fas fa-trash"></i>
-            </button>
-            </div>
-        `;
-    list.appendChild(element);
-    container.classList.add("show-container");
     addToLocalStorage(value);
-    
+    recarregarItensNaTela();
+
 }
+
+function recarregarItensNaTela(){
+    container.classList.add("show-container");
+    const list = document.querySelector(".todo-list");
+    const valores = getLocalStorage();
+    let linha = ``;
+    valores.forEach(function(item){
+        linha +=`
+        <article class="todo-item">
+            <p class="title">${item.value}</p>
+            <div class="btn-container">
+                <!-- delete btn -->
+                <button  onclick="deletaritem('${item.value}')"type="button" class="delete-btn">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </article>
+        `
+    })
+
+    list.innerHTML = linha
+    console.log(linha);
+
+}
+
 function deletelista(){
-    const items = document.querySelectorAll(".todo-item");
-    if (items.length > 0) {
-        items.forEach(function (item) {
-        list.removeChild(item);
-        });
-    container.classList.remove("show-container");
-    setBackToDefault();
-    localStorage.removeItem("list");
-    }    
+    localStorage.removeItem("lista");
+    recarregarItensNaTela();
 }
 
 function addToLocalStorage(value){
@@ -71,3 +78,16 @@ function setBackToDefault() {
     editID = "";
     submitBtn.textContent = "submit";
   }
+
+
+function deletaritem(nomeItem) {
+
+    const lista = getLocalStorage();
+    const listaFiltrada = lista.filter(function(item){
+        const deveSerMantido = item.value != nomeItem;
+        return deveSerMantido;
+
+    });
+    localStorage.setItem("lista", JSON.stringify(listaFiltrada));
+    recarregarItensNaTela();
+}

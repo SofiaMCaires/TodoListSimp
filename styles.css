@@ -130,6 +130,17 @@ p {
   background: var(--clr-black);
 }
 
+.title {
+  margin-bottom: 0;
+  color: var(--clr-grey-1);
+  letter-spacing: 2px;
+  transition: var(--transition);
+}
+
+.todo-item:hover .title {
+  color: var(--clr-grey-5);
+}
+
 .delete-btn {
   background: transparent;
   border-color: transparent;
